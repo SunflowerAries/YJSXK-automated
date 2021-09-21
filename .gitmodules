@@ -1,0 +1,3 @@
+[submodule "crnn"]
+	path = crnn
+	url = git@github.com:SunflowerAries/crnn.pytorch.git
