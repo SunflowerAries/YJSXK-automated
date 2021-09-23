@@ -12,16 +12,17 @@ url_class_chs = 'http://yjsxk.fudan.edu.cn/yjsxkapp/sys/xsxkappfudan/xsxkCourse/
 url_class_res = 'http://yjsxk.fudan.edu.cn/yjsxkapp/sys/xsxkappfudan/xsxkCourse/loadXkjgRes.do?_='
 url_csrf = 'http://yjsxk.fudan.edu.cn/yjsxkapp/sys/xsxkappfudan/xsxkHome/gotoChooseCourse.do'
 
-yjsxk_wanted_class = { '政治理论课': ['自然辨证法概论'],
+yjsxk_wanted_class = { '政治理论课': ['自然辨证法概论', '新时代中国特色社会主义理论与实践'],
                         '第一外国语': [],
                         '专业外语': [],
-                        '学位基础课': ['神经网络与深度学习', '分布式系统'],
-                        '学位专业课': ['数据安全与治理'],
+                        '学位基础课': [],
+                        '学位专业课': [],
                         '专业选修课': [],
-                        '公共选修课': ['学术研究的理论与方法', '中西方传统经济思想的比较'],
-                        '其他可选课': ['前沿网络技术', '在线社交网络', '智能信息处理的统计方法'] }
+                        '公共选修课': [],
+                        '其他可选课': [] }
 
 qtxxk_dept = '计算机科学技术学院'
+xqmc = ['邯郸校区', '江湾校区']
 
 dept = {
     '研究生院': '000',

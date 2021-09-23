@@ -1,6 +1,6 @@
 from time import sleep, time
 from requests import session
-import shutil, os, json, re
+import shutil, os, json, traceback
 from des import o as des_encrypt
 from config import *
 from bs4 import BeautifulSoup
@@ -42,17 +42,15 @@ class Fudan:
         }
         self.headers_get_cls = {
             "Host"      : "yjsxk.fudan.edu.cn",
-                        "Origin"    : "https://yjsxk.fudan.edu.cn",
-                        "Referer"   : "http://yjsxk.fudan.edu.cn/yjsxkapp/sys/xsxkappfudan/xsxkHome/gotoChooseCourse.do",
-                        "User-Agent": self.UA
-
+            "Origin"    : "https://yjsxk.fudan.edu.cn",
+            "Referer"   : "http://yjsxk.fudan.edu.cn/yjsxkapp/sys/xsxkappfudan/xsxkHome/gotoChooseCourse.do",
+            "User-Agent": self.UA
         }
 
     def login(self):
-        file_path = self.timestamp
-        # 创建文件夹并进入
-        os.mkdir(file_path)
-        os.chdir(file_path)
+        if not os.path.exists('./dataset'):
+            os.makedirs('./dataset')
+        os.chdir('./dataset')
         while True:
             timestamp = get_timestamp()
             vcode_get = self.session.get(self.url_vcode_get + timestamp)
@@ -79,28 +77,13 @@ class Fudan:
                         headers=self.headers_login,
                         allow_redirects=False
                     )
-                    try:
-                        resp = json.loads(post.text)
-                        # print(post.text)
-                        if resp["code"] != "3":
-                            if resp["code"] != "1":
-                                print(resp)
-                            os.chdir('../')
-                            return
-                    except:
+                    resp = json.loads(post.text)
+                    # print(post.text)
+                    if resp["code"] != "3":
+                        if resp["code"] != "1":
+                            print(resp)
                         os.chdir('../')
-                        self.data_collect()
-                        raise
-    
-    def data_collect(self):
-        if not os.path.exists('./dataset'):
-            os.makedirs('./dataset')
-        for path, dir_list, file_list in os.walk('.'):
-            if re.search("^\.\/[0-9]*$", path):
-                for datafile in file_list:
-                    shutil.move(os.path.join(os.getcwd(), path, datafile), 'dataset')
-                os.rmdir(path)
-                    
+                        return
 
 class Yjsxk(Fudan):
     def __init__(self, uid, psw, url_vcode_get, url_vcode_post, url_image_get, 
@@ -118,6 +101,8 @@ class Yjsxk(Fudan):
         while True:
             wanted = []
             for key in self.yjsxk_wanted_class:
+                if len(self.yjsxk_wanted_class[key]) == 0:
+                    continue
                 payload = yjsxk_map[key]
                 url_class_post = self.url_class_get.replace("DTHBF", payload[0])
                 self.session.post(
@@ -135,7 +120,7 @@ class Yjsxk(Fudan):
                 clss = json.loads(post.text)
                 
                 for cls in self.yjsxk_wanted_class[key]:
-                    wanted = wanted + list(filter(lambda get_cls: get_cls['KCMC'] == cls and get_cls["DQRS"] < get_cls["KXRS"], clss["datas"]))
+                    wanted = wanted + list(filter(lambda get_cls: get_cls['KCMC'] == cls and get_cls["DQRS"] < get_cls["KXRS"] and get_cls["XQMC"] in xqmc and get_cls["IS_CONFLICT"] == 0, clss["datas"]))
             for wted in wanted:
                 KCLBMC = wted['KCLBMC']
                 if wted['KCLBMC'] == "第一外国语课":
@@ -187,9 +172,9 @@ if __name__ == '__main__':
     yjsxk_fudan = Yjsxk(uid, psw, url_vcode_get, url_vcode_post, url_image_get, 
                         url_class_get, yjsxk_wanted_class, url_class_validate, url_class_chs, url_class_res, url_csrf)
     yjsxk_fudan.login()
-    try:
-        yjsxk_fudan.work()
-    except Exception as e:
-        print(e)
-    finally:
-        yjsxk_fudan.data_collect()
+    while True:
+        try:
+            yjsxk_fudan.work()
+        except Exception as e:
+            print(traceback.format_exc())
+            print(e)
