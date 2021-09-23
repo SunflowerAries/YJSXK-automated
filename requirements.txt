@@ -1,0 +1,8 @@
+torch==1.9.1+cpu
+torchvision==0.10.1+cpu
+torchaudio==0.9.1
+lmdb==1.2.1
+filelock==3.0.12
+lxml==4.6.3
+beautifulsoup4==4.9.3
+opencv-python==4.5.3.56
