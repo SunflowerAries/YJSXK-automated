@@ -1,6 +1,6 @@
 from time import sleep, time
 from requests import session
-import shutil, os, json, traceback
+import shutil, os, json, traceback, sys
 from des import o as des_encrypt
 from config import *
 from bs4 import BeautifulSoup
@@ -63,7 +63,8 @@ class Fudan:
                         r.raw.decode_content = True
                         shutil.copyfileobj(r.raw, f)
                 code = ocr(os.path.join(os.getcwd(), timestamp + '.jpg'))
-                os.remove(timestamp + '.jpg.lock')
+                if sys.platform == 'linux':
+                    os.remove(timestamp + '.jpg.lock')
                 if code != None and len(code) == 4:
                     data = {
                         "loginName": self.uid,

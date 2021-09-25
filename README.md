@@ -1,6 +1,7 @@
 ## 环境配置
 
-**本项目仅在 Ubuntu 20.04 环境下验证通过，其他环境尚未验证功能是否完整**
+### Ubuntu 20.04+
+
 运行本项目前请先确认本地是否安装 python 环境及 pip
 
 ```bash
@@ -20,6 +21,22 @@ git clone git@github.com:SunflowerAries/yjsxk-automated.git
 cd yjsxk-automated
 git submodule update --init
 ```
+
+### Windows 10
+
+Windows 环境下请在 Anaconda 环境下使用，安装好 conda 后，进入 Anaconda Prompt
+
+```
+conda create -n yjsxk python=3.8.8
+activate yjsxk
+```
+
+```bash
+conda install pytorch torchvision torchaudio cpuonly -c pytorch
+conda install requests python-lmdb filelock beautifulsoup4 lxml
+```
+
+依赖环境搭建好后，可以直接在 Anaconda Prompt 下运行程序 `python main.py` 或者在 VScode 下将解释器切换为 yjsxk 后运行。
 
 从 [Baidu Netdisk](https://pan.baidu.com/s/1pLbeCND) 下载预训练模型到 `crnn/data` 文件夹下
 
